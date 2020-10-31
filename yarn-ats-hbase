@@ -1,0 +1,13 @@
+here are the instructions to start ats-hbase app on yarn manually
+
+locate hbase.yarnfile
+cp /etc/hadoop/3.1.0.0-78/0/embedded-yarn-ats-hbase/hbase.yarnfile /tmp/
+# kinit as the yarn-ats-hbase user
+kinit -kt /etc/security/keytabs/yarn-ats.hbase-master.service.keytab yarn-ats-hbase/<host>
+# create the directory if does not exist
+hdfs dfs -mkdir -p /tmp/hbase.yarnfile /user/yarn-ats/.yarn/services/ats-hbase/
+#copy the ats-hbase file
+hdfs dfs -put /tmp/hbase.yarnfile /user/yarn-ats/.yarn/services/ats-hbase/ats-hbase.json
+locate hadoop-metrics2-hbase.properties
+hdfs dfs -put /usr/hdp/3.1.0.0-78/etc/hbase/conf.dist/hadoop-metrics2-hbase.properties /user/yarn-ats/3.1.0.0-78/hadoop-metrics2-hbase.properties
+yarn app -start ats-hbase
