@@ -1,0 +1,5 @@
+#command to read all events from a kafka topic from beginning. If kafka is configured to use SASL_PLAINTEXT as a protocol, it has to be used in the command as shown below:
+./kafka-console-consumer.sh --bootstrap-server kafka.broker.host:6667 --topic ATLAS_ENTITIES --from-beginning --consumer-property security.protocol=SASL_PLAINTEXT > /tmp/topic_events.txt
+
+# get the current offset and LAG for a consumer group
+./kafka-consumer-groups.sh --describe --group atlas --bootstrap-server kafka.broker:6667
