@@ -1,0 +1,53 @@
+### RANGER API CALL TO DELETE A USER
+curl -ku Arun.Natva:<password> -v -i -s -X DELETE https://rangerhost:6182/service/xusers/users/userName/<user>
+### RANGER API CALL TO LIST USERS
+curl -ku Arun.Natva:<password> -v -i -s -X GET -H "Accept: application/json" -H "Content-Type: application/json" https://rangerhost:6182/service/xusers/users
+
+
+## Knox Admin API call to upload descriptor file from a remote ambari server into knox configs
+curl -iku user:passwd -X PUT -H "Content-Type:application/json" -d "@file.json" "https://knoxhost:8443/gateway/admin/api/v1/descriptors/clustername"
+HTTP/1.1 201 Created
+Date: Thu, 19 Dec 2019 14:32:10 GMT
+Set-Cookie: KNOXSESSIONID=node016tc76gg6izbqbjexejnhrhv32.node0;Path=/gateway/admin;Secure;HttpOnly
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Set-Cookie: rememberMe=deleteMe; Path=/gateway/admin; Max-Age=0; Expires=Wed, 18-Dec-2019 14:32:10 GMT
+Location: https://localhost:8443/gateway/admin/api/v1/descriptors/xxxx
+Content-Length: 0
+Server: Jetty(9.4.12.v20180830)
+
+A script to add a shared provider in knox config:
+
+#!/bin/bash
+
+# Run as post-cluster-install @ Knox server VM
+
+if [ -s /etc/knox/conf/README ]
+then
+
+cat > arunp1.json << EOF
+{
+  "providers": [
+    {
+      "role": "authentication",
+      "name": "ShiroProvider",
+      "enabled": "true",
+      "params": {
+        "sessionTimeout": "20",
+        "main.ldapRealm": "org.apache.knox.gateway.shirorealm.KnoxLdapRealm",
+        "main.ldapContextFactory": "org.apache.knox.gateway.shirorealm.KnoxLdapContextFactory",
+        "main.ldapRealm.contextFactory": "$ldapContextFactory",
+        "main.ldapRealm.userDnTemplate": "cn={0},OU=MYORG,OU=MYDEPT,OU=CITY,DC=tdf,DC=dev",
+        "main.ldapRealm.contextFactory.url": "ldaps://MYADSERVER.DOMAIN:636",
+        "main.ldapRealm.contextFactory.authenticationMechanism": "simple",
+        "urls./**": "authcBasic"
+      }
+    }
+  ]
+}
+EOF
+
+curl -iku aduser:adpasswd -X PUT -H Content-Type:application/json -d "@arunp1.json" "https://localhost:8443/gateway/admin/api/v1/providerconfig/arunp1"
+
+#/usr/hdp/current/knox-server/bin/knoxcli.sh create-alias ambari.discovery.password --value 'password'
+
+fi
