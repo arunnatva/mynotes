@@ -1,0 +1,34 @@
+
+### Obtain a service configuration from ambari configs.sh and write into a file
+/var/lib/ambari-server/resources/scripts/configs.sh -u <user> -p <passwd> -port 8080 get <ambari-host> <cluster-name> <service-name> >  <conf.file>
+
+### Post the configurations from a configuration file to an ambari service
+/var/lib/ambari-server/resources/scripts/configs.sh -u <user> -p <passwd> -port 8080 set <ambari-host> <cluster-name> <service-name> <conf.file>
+
+# command to export the blueprint
+curl -H "X-Requested-By: ambari" -X GET -u admin:admin http://ambari-server:8080/api/v1/clusters/TestCluster?format=blueprint
+
+#links to download MPACK for DP Profiler agent
+#Query to update the blueprint type to data lake, in cloudbreak database::
+http://s3.amazonaws.com/dev.hortonworks.com/DSS/centos7/1.x/BUILDS/1.5.0.0-36/tars/dataplane_profilers/dpprofiler-ambari-mpack-hdp3-1.5.0.1.5.0.0-36.tar.gz
+
+
+DSS & PROFILER AGENT TARBALLS & MPACK:
+DSS-APP (tarball) : http://downloads-hortonworks.akamaized.net/DSS-APP/1.5.0.0-13/centos7/DSS-APP-1.5.0.0-13-centos7-rpm.tar.gz
+Ambari-Mpack : http://downloads-hortonworks.akamaized.net/DSS/1.5.0.0-36/centos7/dpprofiler-ambari-mpack-1.5.0.1.5.0.0-36.tar.gz
+Profiler-Agent (tarball) : http://downloads-hortonworks.akamaized.net/DSS/1.5.0.0-36/centos7/DSS-1.5.0.0-36-centos7-rpm.tar.gz
+
+Following is the Jira to track release binaries
+https://hortonworks.jira.com/browse/BUG-119610
+
+#Query to update the blueprint type to data lake, in cloudbreak database:
+UPDATE blueprint SET tags = '{"shared_services_ready":true}' where id = 14;
+
+#AMBARI API CALL to make a user as SERVICE ADMIN or CLUSTER ADMIN
+curl -iv -u admin:passwd -H "X-Requested-By: ambari" -X POST -d '[{ "PrivilegeInfo": { "permission_name":"CLUSTER.ADMINISTRATOR","principal_name":"arun.natva","principal_type":"USER" }}]' http://<ambarihost or ip>:8080/api/v1/clusters/<cluster>/privileges
+
+#AMBARI API CALL to enable or disable a user:
+curl -iv -u admin:passwd -H "X-Requested-By: ambari" -X PUT -d '{"Users/active":"true/false"}' http://<ambarihost or ip>:8080/api/v1/users/admin
+
+#AMBARI API CALL to make a user AMBARI ADMIN (full access)
+curl -iv -u admin:passwd -H "X-Requested-By: ambari" -X PUT -d '{"Users/admin":"true"}' http://<ambarihost or ip>:8080/api/v1/users/arun.natva
