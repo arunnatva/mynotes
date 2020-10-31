@@ -1,0 +1,33 @@
+Maven hack:
+If maven is always pulling dependencies from default repo1.maven.org, modify the settings.xml and add <mirror> and provide your nexus repository url in the mirror stanza.
+this makes maven to pull libraries from your nexus repository instead of trying repo1.maven.org first
+
+Get version of the JDBC jar:
+zipgrep 'Bundle-Version' /path/to/jdbc/jar
+
+Turn on DEBUG or TRACE logs on hbase region servers
+curl -X GET "http://cluster.rshost.com:16030/logLevel?log=org.apache.hadoop.hbase&level=TRACE"
+
+# curl command to access the livy http endpoint
+ curl --negotiate -u: 'http://livy-host:8999/sessions'
+
+# DSS, and profiler agent mpack, and tarballs
+DSS-APP (tarball) : http://downloads-hortonworks.akamaized.net/DSS-APP/1.5.0.0-13/centos7/DSS-APP-1.5.0.0-13-centos7-rpm.tar.gz
+Ambari-Mpack : http://downloads-hortonworks.akamaized.net/DSS/1.5.0.0-36/centos7/dpprofiler-ambari-mpack-1.5.0.1.5.0.0-36.tar.gz
+Profiler-Agent (tarball) : http://downloads-hortonworks.akamaized.net/DSS/1.5.0.0-36/centos7/DSS-1.5.0.0-36-centos7-rpm.tar.gz
+
+#Following is the Jira to track release binaries
+https://hortonworks.jira.com/browse/BUG-119610
+
+#import a certificate into keystore or truststore
+keytool -import -alias knoxCertificate -file /home/user/knox.crt -keystore ${JAVA_HOME}/jre/lib/security/cacerts
+
+#ldapsearch example that returns all objects from the domain
+ldapsearch -H ldaps://fqdn -x -D "ldapadminuser@domain" -b "dc=example,dc=com" "(sAMAccountName=user)" -w 'passwd' "cn=*"
+ldapsearch -x -H ldaps://adserverfqdn -D  "ldapbinduser@example.com" -b "dc=example,dc=com"(sAMAccountName=*)" "cn=*" -w 'xxxxxxxxxxx'
+
+# print a certificate details from a keystore
+keytool -list -v -alias passwordtest1 -keystore /etc/pki/ca-trust/extracted/java/cacerts
+
+# ldapsearch without validating certificates
+LDAPTLS_REQCERT=never ldapsearch -v -H ldaps://ADSERVER -x -D  "binddn@domain" -b "dc=example,dc=com" "(sAMAccountName=user)" "cn=*" -W -d 1
