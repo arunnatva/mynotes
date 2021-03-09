@@ -31,3 +31,7 @@ keytool -list -v -alias passwordtest1 -keystore /etc/pki/ca-trust/extracted/java
 
 # ldapsearch without validating certificates
 LDAPTLS_REQCERT=never ldapsearch -v -H ldaps://ADSERVER -x -D  "binddn@domain" -b "dc=example,dc=com" "(sAMAccountName=user)" "cn=*" -W -d 1
+
+# LDAPSEARCH to fetch information of one user:
+ldapsearch -v -H ldap://ADSERVER_or_LDAPSERVER:389 -x -D  "binduser@domain" -s sub "(userPrincipalName=user@domain)" -b "DC=example,DC=com" -W
+
