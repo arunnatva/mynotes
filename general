@@ -35,3 +35,5 @@ LDAPTLS_REQCERT=never ldapsearch -v -H ldaps://ADSERVER -x -D  "binddn@domain" -
 # LDAPSEARCH to fetch information of one user:
 ldapsearch -v -H ldap://ADSERVER_or_LDAPSERVER:389 -x -D  "binduser@domain" -s sub "(userPrincipalName=user@domain)" -b "DC=example,DC=com" -W
 
+#extract certificate using openssl
+openssl s_client -connect adserver.domain:636 -showcerts </dev/null 2>/dev/null | openssl x509 -outform PEM > ad_server.pem
