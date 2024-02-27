@@ -40,3 +40,6 @@ openssl s_client -connect adserver.domain:636 -showcerts </dev/null 2>/dev/null 
 
 ### when chrome browser does not allow to open up HTTPS URL
 type " thisisunsafe " anywhere on the browser 
+
+### command to get the keytore and truststore passwords from a host
+strings /proc/$(ps -ef | grep NIFI_NODE | head -1 | awk '{print $2}')/environ | egrep -i "(KEY|TRUST)STORE_PASSWORD"
